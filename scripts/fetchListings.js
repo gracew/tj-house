@@ -18,15 +18,16 @@ async function main() {
   const res = await client.query("select * from (select redfin_region_id from zip_code_to_redfin_region_id) r where not exists(select from listings where redfin_region_id=r.redfin_region_id)");
   console.log(res.rows.length);
 
-  // kick off requests in batches of 200
-  for (var i = 0; i < res.rows.length / 100; i++) {
+  // kick off requests in batches of 100
+  const batchSize = 50;
+  for (var i = 0; i < res.rows.length / batchSize; i++) {
     console.log(i);
-    const subArr = res.rows.slice(i * 100, (i + 1) * 100);
+    const subArr = res.rows.slice(i * batchSize, (i + 1) * batchSize  );
 
     await Promise.all(subArr.map(async row => {
       const listings = await getListings(row.redfin_region_id);
       return Promise.all(listings.map(l => 
-        client.query('INSERT INTO listings(redfin_region_id, zip_code, street_address, metadata) VALUES ($1, $2, $3, $4)', [row.redfin_region_id, l.postalCode.value, l.streetLine.value, l])
+        client.query('INSERT INTO listings(redfin_region_id, zip_code, street_address, metadata, price) VALUES ($1, $2, $3, $4, $5)', [row.redfin_region_id, l.postalCode.value, l.streetLine.value, l, l.price.value])
       ));
     }));
   }

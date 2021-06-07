@@ -3,6 +3,7 @@ CREATE TABLE listings (
     redfin_region_id text NOT NULL,
     zip_code text,
     street_address text,
+    price integer,
     metadata jsonb,
     fetched_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
