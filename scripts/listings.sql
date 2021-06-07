@@ -8,3 +8,4 @@ CREATE TABLE listings (
     fetched_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 ALTER TABLE ONLY listings ADD CONSTRAINT pk_listings_id PRIMARY KEY (id);
+CREATE INDEX idx_listings_zip_code ON listings USING btree (zip_code);
