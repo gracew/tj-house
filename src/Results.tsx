@@ -6,11 +6,15 @@ import Listing from './Listing';
 import './Results.css';
 
 function Results() {
+  const url = process.env.REACT_APP_TJ_HOUSE_BE_URL || 'http://localhost:5000';
   const [distance, setDistance] = useState<number>(1);
   const [price, setPrice] = useState<number>(250_000);
 
-  const [data, setData] = useState<any[]>([]);
+  const [count, setCount] = useState<number>();
+  const [rows, setRows] = useState<any[]>([]);
+  const [paging, setPaging] = useState<any>();
   const [loading, setLoading] = useState(false);
+  const [moreLoading, setMoreLoading] = useState(false);
 
   function selectDistance(e: any) {
     setDistance(e.target.value);
@@ -22,14 +26,29 @@ function Results() {
 
   async function getResults() {
     setLoading(true);
-    const url = process.env.REACT_APP_TJ_HOUSE_BE_URL || 'http://localhost:5000';
     const res = await fetch(url, {
       method: 'post',
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ price, distance }),
     })
-    setData(await res.json());
+    const parsed = await res.json();
+    setCount(parsed.count);
+    setRows(parsed.rows);
+    setPaging(parsed.paging);
     setLoading(false);
+  }
+
+  async function getMoreResults() {
+    setMoreLoading(true);
+    const res = await fetch(url, {
+      method: 'post',
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ price, distance, offset: paging.nextOffset }),
+    })
+    const parsed = await res.json();
+    setRows([...rows, ...parsed.rows])
+    setPaging(parsed.paging);
+    setMoreLoading(false);
   }
 
   return (
@@ -63,8 +82,9 @@ function Results() {
         </Button>
       </Form>
 
+      {count && <div>{count} results</div>}
       <div className="listings">
-        {!loading && data.map(d => <Listing
+        {!loading && rows.map((d: any) => <Listing
           key={d.id}
           metadata={d.metadata}
           closest_tj_distance_mi={d.closest_tj_distance_mi}
@@ -72,6 +92,12 @@ function Results() {
           tj_address={d.tj_address}
         />)}
       </div>
+      {paging && paging.moreResults &&
+        <Button variant="primary" onClick={getMoreResults}>
+          Load more
+          {moreLoading && <Spinner className="loading-status" as="span" animation="grow" size="sm" role="status" aria-hidden="true" />}
+        </Button>
+      }
     </div>
   );
 }

@@ -10,6 +10,7 @@ function App() {
         <div>We love Trader Joe's and believe that it should be easier to find your dream home based off where the closest Trader Joe's is. Search below. :)</div>
       </header>
       <Results />
+      <div><a className="contact" href="mailto:tjhouseapp@gmail.com">Contact</a></div>
     </div>
   );
 }
