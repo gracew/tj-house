@@ -11,14 +11,13 @@ app.post('/', async (req, res) => {
   const distance = req.body.distance;
   const price = req.body.price;
   const query = `select 
-  l.id, l.metadata,
-  d.distance_mi, 
-  t.store_no as tj_store_no, t.name as tj_name, t.address as tj_address
-  from (select zip_codes[1] as tj_zip_code, zip_codes[2] as zip_code, distance_mi from zip_code_distances where distance_mi < $1) d 
-  left join listings l on d.zip_code = l.zip_code 
-  left join trader_joes t on d.tj_zip_code = t.zip_code_str 
-  where price < $2 
-  order by distance_mi 
+  l.id, l.metadata, l.closest_tj_distance_mi,
+  t.name as tj_name, t.address as tj_address
+  from listings l 
+  left join trader_joes t on store_no = l.closest_tj_store_no
+  where closest_tj_distance_mi < $1
+  and price < $2 
+  order by closest_tj_distance_mi 
   limit 100`;
   const pgRes = await client.query(query, [distance, price]);
   res.json(pgRes.rows);
