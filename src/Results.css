@@ -1,3 +1,7 @@
+.Results {
+  flex: 1;
+}
+
 .results-form {
   margin: 20px auto;
   width: 150px;
@@ -17,11 +21,13 @@
   font-weight: bold;
 }
 
-.results-form .form-submit .loading-status {
+.results-form .form-submit .loading-status,
+.load-more .loading-status {
   margin-left: 10px;
 }
 
 .listings {
+  margin: 10px 0 30px 0;
   display: grid;
   grid-template-columns: 1fr;
   row-gap: 20px;
@@ -44,4 +50,8 @@
   .listings {
     grid-template-columns: 1fr 1fr 1fr 1fr;
   }
+}
+
+.load-more {
+  margin-bottom: 50px;
 }

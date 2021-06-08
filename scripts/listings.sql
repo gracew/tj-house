@@ -12,3 +12,4 @@ CREATE TABLE listings (
 ALTER TABLE ONLY listings ADD CONSTRAINT pk_listings_id PRIMARY KEY (id);
 CREATE INDEX idx_listings_zip_code ON listings USING btree (zip_code);
 CREATE INDEX idx_listings_closest_tj_distance_mi ON listings USING btree (closest_tj_distance_mi);
+CREATE INDEX idx_listings_closest_tj_distance_mi_price ON listings (closest_tj_distance_mi, price);
