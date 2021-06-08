@@ -5,7 +5,7 @@ $theme-colors: (
 @import "~bootstrap/scss/bootstrap";
 
 .App {
-  margin: 50px 50px 30px 50px;
+  margin: 50px 50px 0 50px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -13,6 +13,10 @@ $theme-colors: (
 }
 
 .contact {
+  height: 50px;
+}
+
+.contact a {
   text-decoration: none;
   color: #212529;
 }

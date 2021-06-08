@@ -93,7 +93,7 @@ function Results() {
         />)}
       </div>
       {paging && paging.moreResults &&
-        <Button variant="primary" onClick={getMoreResults}>
+        <Button className="load-more" variant="primary" onClick={getMoreResults}>
           Load more
           {moreLoading && <Spinner className="loading-status" as="span" animation="grow" size="sm" role="status" aria-hidden="true" />}
         </Button>
