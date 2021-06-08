@@ -13,7 +13,10 @@ app.post('/', async (req, res) => {
   const offset = req.body.offset || 0;
   const pageSize = 60;
 
-  const countQuery = `select count(*) from listings where closest_tj_distance_mi < $1 and price < $2`
+  const countQuery = `select count(*) from listings 
+  where closest_tj_distance_mi < $1 
+  and price < $2
+  and property_type in (1,2,3,5,6,7)`
   const countRes = await client.query(countQuery, [distance, price]);
   const count = countRes.rows[0].count;
 
@@ -24,6 +27,7 @@ app.post('/', async (req, res) => {
   left join trader_joes t on store_no = l.closest_tj_store_no
   where closest_tj_distance_mi < $1
   and price < $2 
+  and property_type in (1,2,3,5,6,7)
   order by closest_tj_distance_mi 
   offset $3
   limit $4`;
