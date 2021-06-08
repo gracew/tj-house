@@ -1,0 +1,21 @@
+CREATE TABLE trader_joes (
+  store_no integer,
+  name text,
+  latitude real,
+  longitude real,
+  address text,
+  street text,
+  city text,
+  state text,
+  zip_code integer,
+  county text,
+  phone text,
+  open_hours text,
+  url text,
+  provider text,
+  updated_date text,
+  country text,
+  status text,
+  direction_url text,
+  maps text
+)

@@ -45,20 +45,6 @@ function toRad(Value) {
   return Value * Math.PI / 180;
 }
 
-function pgParams(num) {
-  const paramStrs = [];
-  for (let i = 1; i <= num; i++) {
-    paramStrs.push(`$${i}`);
-  }
-  return paramStrs.join(', ');
-}
-
-async function insert(client, tableName, kv) {
-  const keys = Object.keys(kv);
-  const q = `INSERT INTO ${tableName} (${keys.join(", ")}) VALUES (${pgParams(keys.length)})`;
-  return client.query(q, Object.values(kv));
-}
-
 async function main() {
   const locations = await getTJLocations();
   const tjZips = locations.map(l => {
