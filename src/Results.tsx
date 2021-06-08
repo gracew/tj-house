@@ -8,7 +8,7 @@ function numberWithCommas(x: number) {
 }
 
 function Results() {
-  const [distance, setDistance] = useState<number>(5);
+  const [distance, setDistance] = useState<number>(1);
   const [price, setPrice] = useState<number>(250_000);
   const [data, setData] = useState<any[]>([]);
 
@@ -54,7 +54,7 @@ function Results() {
       {data.map(d => <div key={d.id}>
         <h3><a href={"https://redfin.com" + d.metadata.url}>{d.metadata.streetLine.value}</a></h3>
         <div>${numberWithCommas(d.metadata.price.value)}</div>
-        <div>{d.distance_mi} away from {d.tj_name}</div>
+        <div>{d.closest_tj_distance_mi.toFixed(3)} mi away from {d.tj_name}</div>
         <div>{d.tj_address}</div>
       </div>)}
     </div>
