@@ -21,7 +21,8 @@ function Results() {
   }
 
   async function getResults() {
-    const res = await fetch(`http://localhost:5000`, {
+    const url = process.env.REACT_APP_TJ_HOUSE_BE_URL || 'http://localhost:5000';
+    const res = await fetch(url, {
       method: 'post',
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ price, distance }),
