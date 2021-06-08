@@ -18,11 +18,11 @@ async function main() {
   const res = await client.query("select * from (select redfin_region_id from zip_code_to_redfin_region_id) r where not exists(select from listings where redfin_region_id=r.redfin_region_id)");
   console.log(res.rows.length);
 
-  // kick off requests in batches of 100
+  // kick off requests in batches
   const batchSize = 50;
   for (var i = 0; i < res.rows.length / batchSize; i++) {
     console.log(i);
-    const subArr = res.rows.slice(i * batchSize, (i + 1) * batchSize  );
+    const subArr = res.rows.slice(i * batchSize, (i + 1) * batchSize);
 
     await Promise.all(subArr.map(async row => {
       const listings = await getListings(row.redfin_region_id);
