@@ -21,7 +21,8 @@
   font-weight: bold;
 }
 
-.results-form .form-submit .loading-status {
+.results-form .form-submit .loading-status,
+.load-more .loading-status {
   margin-left: 10px;
 }
 
