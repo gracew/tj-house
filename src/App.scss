@@ -1,0 +1,13 @@
+$theme-colors: (
+    "primary": #af0006
+);
+
+@import "~bootstrap/scss/bootstrap";
+
+.App {
+  margin: 50px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}

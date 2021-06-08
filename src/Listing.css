@@ -1,0 +1,25 @@
+.listing {
+  text-decoration: none;
+  color: #212529;
+}
+
+.listing .card-img-wrapper {
+  height: 150px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.listing .card-img-top {
+  object-fit: cover;
+}
+
+.listing .card-text {
+  margin-top: 10px;
+}
+
+.tj-address {
+  color: #6c757d;
+  font-size: 14px;
+}
