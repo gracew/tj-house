@@ -132,10 +132,10 @@ function Results() {
             <option value={300_000}>$200K - $300K</option>
             <option value={400_000}>$300K - $400K</option>
             <option value={500_000}>$400K - $500K</option>
-            <option value={500_000}>$500K - $600K</option>
-            <option value={500_000}>$600K - $700K</option>
-            <option value={500_000}>$700K - $800K</option>
-            <option value={500_000}>$800K - $900K</option>
+            <option value={600_000}>$500K - $600K</option>
+            <option value={700_000}>$600K - $700K</option>
+            <option value={800_000}>$700K - $800K</option>
+            <option value={900_000}>$800K - $900K</option>
             <option value={1_000_000}>$900K - $1M</option>
             <option value={500_000_000}>&gt; $1M</option>
           </Form.Control>
