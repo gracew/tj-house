@@ -60,7 +60,7 @@ function Results() {
     <div className="Results">
       <Form className="results-form">
         <Form.Group>
-        <Form.Label>State 🇺🇸</Form.Label>
+          <Form.Label>State 🇺🇸</Form.Label>
           <Form.Control as="select" value={state} onChange={selectState}>
             <option value={'AL'}>Alabama</option>
             <option value={'AK'}>Alaska</option>
@@ -114,6 +114,8 @@ function Results() {
             <option value={'WI'}>Wisconsin</option>
             <option value={'WY'}>Wyoming</option>
           </Form.Control>
+        </Form.Group>
+        <Form.Group>
           <Form.Label>Distance 📍</Form.Label>
           <Form.Control as="select" value={distance} onChange={selectDistance}>
             <option value={1}>&lt; 1 mi</option>
