@@ -142,7 +142,7 @@ function Results() {
         </Form.Group>
 
         <Button className="form-submit" variant="primary" onClick={getResults}>
-          Go!
+          Let's Go!
           {loading && <Spinner className="loading-status" as="span" animation="grow" size="sm" role="status" aria-hidden="true" />}
         </Button>
       </Form>
