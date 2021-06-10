@@ -9,7 +9,7 @@ function Results() {
   const url = process.env.REACT_APP_TJ_HOUSE_BE_URL || 'http://localhost:5000';
   const [state, setState] = useState<any>('CA');
   const [distance, setDistance] = useState<number>(1);
-  const [price, setPrice] = useState<number>(250_000);
+  const [price, setPrice] = useState<number>(200_000);
 
   const [count, setCount] = useState<number>();
   const [rows, setRows] = useState<any[]>([]);
