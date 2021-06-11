@@ -84,8 +84,7 @@ function Results() {
   return (
     <div className="Results">
       <Form className="results-form">
-      <Form.Group as={Row}>
-        <Col xs="6">
+      <Form.Group>
         <Form.Label>State 🇺🇸</Form.Label>
           <Form.Control as="select" value={state} onChange={selectState}>
             <option value={''}></option>
@@ -141,14 +140,6 @@ function Results() {
             <option value={'WI'}>Wisconsin</option>
             <option value={'WY'}>Wyoming</option>
           </Form.Control>
-          </Col>
-          <Col xs="4">
-            <Form.Label>or Zip 📬</Form.Label>
-            <Form.Control type="number" placeholder="Zip" value={zip} onChange={selectZip} />
-            <Form.Control.Feedback type="invalid">
-              Please provide a valid zip.
-            </Form.Control.Feedback>
-          </Col>
         </Form.Group>
         <Form.Group>
         <Form.Label>Distance 📍</Form.Label>
