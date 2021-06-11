@@ -87,7 +87,6 @@ function Results() {
       <Form.Group>
         <Form.Label>State 🇺🇸</Form.Label>
           <Form.Control as="select" value={state} onChange={selectState}>
-            <option value={''}></option>
             <option value={'AL'}>Alabama</option>
             <option value={'AK'}>Alaska</option>
             <option value={'AZ'}>Arizona</option>
