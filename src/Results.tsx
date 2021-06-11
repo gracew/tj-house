@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col'
 import Spinner from 'react-bootstrap/Spinner';
 import Listing from './Listing';
 import './Results.css';
@@ -8,33 +10,51 @@ import './Results.css';
 function Results() {
   const url = process.env.REACT_APP_TJ_HOUSE_BE_URL || 'http://localhost:5000';
   const [state, setState] = useState<any>('CA');
+  const [zip, setZip] = useState<any>(null);
   const [distance, setDistance] = useState<number>(1);
-  const [price, setPrice] = useState<number>(250_000);
-
+  const [priceLow, setPriceLow] = useState<number>(200_000);
+  const [priceHigh, setPriceHigh] = useState<number>(400_000);
   const [count, setCount] = useState<number>();
   const [rows, setRows] = useState<any[]>([]);
   const [paging, setPaging] = useState<any>();
   const [loading, setLoading] = useState(false);
   const [moreLoading, setMoreLoading] = useState(false);
-
+  
   function selectState(e: any) {
     setState(e.target.value);
+    setZip('');
+  }
+
+  function selectZip(e: any) {
+    setZip(e.target.value);
+    setState('');
   }
 
   function selectDistance(e: any) {
     setDistance(e.target.value);
   }
 
-  function selectPrice(e: any) {
-    setPrice(e.target.value);
+  function selectPriceLow(e: any) {
+    if(Number(e.target.value) > Number(priceHigh) - 99999) {
+      setPriceHigh(Number(e.target.value) + 100000);
+    }
+    setPriceLow(e.target.value);
+  }
+
+  function selectPriceHigh(e: any) {
+    if(Number(e.target.value) < Number(priceLow) + 99999) {
+      setPriceLow(Number(e.target.value) - 100000);
+    }
+    setPriceHigh(e.target.value);
   }
 
   async function getResults() {
     setLoading(true);
+    console.log(priceHigh, distance, state);
     const res = await fetch(url, {
       method: 'post',
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ price, distance, state }),
+      body: JSON.stringify({ priceLow, priceHigh, distance, state }),
     })
     const parsed = await res.json();
     setCount(parsed.count);
@@ -45,10 +65,11 @@ function Results() {
 
   async function getMoreResults() {
     setMoreLoading(true);
+    console.log(priceHigh, distance, state);
     const res = await fetch(url, {
       method: 'post',
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ price, distance, state, offset: paging.nextOffset }),
+      body: JSON.stringify({ priceLow, priceHigh, distance, state, offset: paging.nextOffset }),
     })
     const parsed = await res.json();
     setRows([...rows, ...parsed.rows])
@@ -56,12 +77,17 @@ function Results() {
     setMoreLoading(false);
   }
 
+  function numberWithCommas(x: any) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
   return (
     <div className="Results">
       <Form className="results-form">
-        <Form.Group>
+      <Form.Group>
         <Form.Label>State 🇺🇸</Form.Label>
           <Form.Control as="select" value={state} onChange={selectState}>
+            <option value={''}></option>
             <option value={'AL'}>Alabama</option>
             <option value={'AK'}>Alaska</option>
             <option value={'AZ'}>Arizona</option>
@@ -114,7 +140,9 @@ function Results() {
             <option value={'WI'}>Wisconsin</option>
             <option value={'WY'}>Wyoming</option>
           </Form.Control>
-          <Form.Label>Distance 📍</Form.Label>
+        </Form.Group>
+        <Form.Group>
+        <Form.Label>Distance 📍</Form.Label>
           <Form.Control as="select" value={distance} onChange={selectDistance}>
             <option value={1}>&lt; 1 mi</option>
             <option value={2}>&lt; 2 mi</option>
@@ -123,24 +151,42 @@ function Results() {
             <option value={20}>&lt; 20 mi</option>
           </Form.Control>
         </Form.Group>
-
-        <Form.Group>
-          <Form.Label>Price 💸</Form.Label>
-          <Form.Control as="select" value={price} onChange={selectPrice}>
-            <option value={100_000}>&lt; $100K</option>
-            <option value={200_000}>$100K - $200K</option>
-            <option value={300_000}>$200K - $300K</option>
-            <option value={400_000}>$300K - $400K</option>
-            <option value={500_000}>$400K - $500K</option>
-            <option value={600_000}>$500K - $600K</option>
-            <option value={700_000}>$600K - $700K</option>
-            <option value={800_000}>$700K - $800K</option>
-            <option value={900_000}>$800K - $900K</option>
-            <option value={1_000_000}>$900K - $1M</option>
-            <option value={500_000_000}>&gt; $1M</option>
-          </Form.Control>
+        <Form.Group as={Row}>
+          <Col xs="12">
+            <Form.Label>Price Range 💸</Form.Label>
+          </Col>
+          <Col xs="6">
+            <Form.Control as="select" value={priceLow} onChange={selectPriceLow}>
+              <option value={0}>$1</option>
+              <option value={100_000}>$100K</option>
+              <option value={200_000}>$200K</option>
+              <option value={300_000}>$300K</option>
+              <option value={400_000}>$400K</option>
+              <option value={500_000}>$500K</option>
+              <option value={600_000}>$600K</option>
+              <option value={700_000}>$700K</option>
+              <option value={800_000}>$800K</option>
+              <option value={900_000}>$900K</option>
+              <option value={1_000_000}>$1M</option>
+            </Form.Control>
+          </Col>
+          <Col xs="6">
+            <Form.Control as="select" value={priceHigh} onChange={selectPriceHigh}>
+              <option value={100_000}>$100K</option>
+              <option value={200_000}>$200K</option>
+              <option value={300_000}>$300K</option>
+              <option value={400_000}>$400K</option>
+              <option value={500_000}>$500K</option>
+              <option value={600_000}>$600K</option>
+              <option value={700_000}>$700K</option>
+              <option value={800_000}>$800K</option>
+              <option value={900_000}>$900K</option>
+              <option value={1_000_000}>$1M</option>
+              <option value={500_000_000}>&gt; $1M</option>
+            </Form.Control>
+          </Col>
         </Form.Group>
-
+        
         <Button className="form-submit" variant="primary" onClick={getResults}>
           Let's Go!
           {loading && <Spinner className="loading-status" as="span" animation="grow" size="sm" role="status" aria-hidden="true" />}
