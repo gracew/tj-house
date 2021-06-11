@@ -19,9 +19,7 @@ app.post('/', async (req, res) => {
   where closest_tj_distance_mi < $1 
   and price > $2
   and price < $3
-  AND zip_code IN (
-    SELECT DISTINCT trader_joes.zip_code::VARCHAR FROM trader_joes WHERE state = $4
-  )
+  and state = $4
   and property_type in (1,2,3,5,6,7)`
   const countRes = await client.query(countQuery, [distance, priceLow, priceHigh, state]);
   const count = countRes.rows[0].count;
@@ -34,9 +32,7 @@ app.post('/', async (req, res) => {
   where closest_tj_distance_mi < $1
   and price > $2
   and price < $3 
-  and l.zip_code in (
-    SELECT DISTINCT trader_joes.zip_code::VARCHAR FROM trader_joes WHERE state = $4
-  )
+  and l.state = $4
   and property_type in (1,2,3,5,6,7)
   order by closest_tj_distance_mi 
   offset $5

@@ -8,6 +8,7 @@ CREATE TABLE trader_joes (
   city text,
   state text,
   zip_code integer,
+  zip_code_str text,
   county text,
   phone text,
   open_hours text,
