@@ -152,8 +152,10 @@ function Results() {
           </Form.Control>
         </Form.Group>
         <Form.Group as={Row}>
+          <Col xs="12">
+            <Form.Label>Price Range 💸</Form.Label>
+          </Col>
           <Col xs="6">
-            <Form.Label>Price Range</Form.Label>
             <Form.Control as="select" value={priceLow} onChange={selectPriceLow}>
               <option value={0}>$1</option>
               <option value={100_000}>$100K</option>
@@ -169,7 +171,6 @@ function Results() {
             </Form.Control>
           </Col>
           <Col xs="6">
-          <Form.Label>💸</Form.Label>
             <Form.Control as="select" value={priceHigh} onChange={selectPriceHigh}>
               <option value={100_000}>$100K</option>
               <option value={200_000}>$200K</option>
