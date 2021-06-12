@@ -12,6 +12,7 @@ app.post('/', async (req, res) => {
   const distance = req.body.distance;
   const priceLow = req.body.priceLow;
   const priceHigh = req.body.priceHigh;
+  const propertyTypes = req.body.propertyTypes.join();
   const offset = req.body.offset || 0;
   const pageSize = 60;
 
@@ -20,7 +21,7 @@ app.post('/', async (req, res) => {
   and price > $2
   and price < $3
   and state = $4
-  and property_type in (1,2,3,5,6,7)`
+  and property_type in (` + propertyTypes + `)`
   const countRes = await client.query(countQuery, [distance, priceLow, priceHigh, state]);
   const count = countRes.rows[0].count;
 
@@ -33,10 +34,11 @@ app.post('/', async (req, res) => {
   and price > $2
   and price < $3 
   and l.state = $4
-  and property_type in (1,2,3,5,6,7)
+  and property_type in (` + propertyTypes + `)
   order by closest_tj_distance_mi 
   offset $5
   limit $6`;
+  
   const pgRes = await client.query(query, [distance, priceLow, priceHigh, state, offset, pageSize]);
   res.json({
     count,
@@ -51,6 +53,6 @@ app.post('/', async (req, res) => {
 client.connect()
   .then(() => {
     app.listen(port, () => {
-      console.log(`Example app listening at http://localhost:${port}`)
+      console.log(`TraderJoes.house app listening at http://localhost:${port}`)
     })
   })

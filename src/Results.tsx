@@ -6,14 +6,33 @@ import Col from 'react-bootstrap/Col'
 import Spinner from 'react-bootstrap/Spinner';
 import Listing from './Listing';
 import './Results.css';
+import { type } from 'os';
 
 function Results() {
   const url = process.env.REACT_APP_TJ_HOUSE_BE_URL || 'http://localhost:5000';
   const [state, setState] = useState<any>('CA');
-  const [zip, setZip] = useState<any>(null);
   const [distance, setDistance] = useState<number>(1);
   const [priceLow, setPriceLow] = useState<number>(200_000);
   const [priceHigh, setPriceHigh] = useState<number>(400_000);
+  const [homeChecked, toggleHome] = useState(true);
+  const [condoChecked, toggleCondo] = useState(true);
+  const [townhouseChecked, toggleTownhouse] = useState(true);
+  const [multiFamilyChecked, toggleMultiFamily] = useState(true);
+  enum PropertyType {
+    Land = 1,
+    ResidentialDevelopmentLand = 2,
+    Condo = 3,
+    MultiFamilySmall = 4, // 2 - 4 units
+    MultiFamilyLarge = 5, // 5+
+    House = 6,
+    Farm = 7,
+    VacantLand = 8,
+    CoOp = 9,
+    ManufacturedHome = 10,
+    Parking = 11,
+    BoatDock = 12,
+    Townhouse = 13
+  }
   const [count, setCount] = useState<number>();
   const [rows, setRows] = useState<any[]>([]);
   const [paging, setPaging] = useState<any>();
@@ -21,13 +40,7 @@ function Results() {
   const [moreLoading, setMoreLoading] = useState(false);
   
   function selectState(e: any) {
-    setState(e.target.value);
-    setZip('');
-  }
-
-  function selectZip(e: any) {
-    setZip(e.target.value);
-    setState('');
+    setState(e.target.value)
   }
 
   function selectDistance(e: any) {
@@ -48,13 +61,46 @@ function Results() {
     setPriceHigh(e.target.value);
   }
 
+  function selectHome(e: any) {
+    toggleHome(e.target.checked);
+  }
+  function selectCondo(e: any) {
+    toggleCondo(e.target.checked);
+  }
+  function selectTownhouse(e: any) {
+    toggleTownhouse(e.target.checked);
+  }
+  function selectMultiFamily(e: any) {
+    toggleMultiFamily(e.target.checked);
+  }
+  
+  function setPropertyTypes(home: boolean, condo: boolean, townhouse: boolean, multiFamily: boolean) {
+    let types = [];
+    if ( home ) { types.push( PropertyType.House )};
+    if ( condo ) { 
+      types.push( PropertyType.Condo );
+      types.push( PropertyType.CoOp );
+    };
+    if ( townhouse ) { types.push( PropertyType.Townhouse )};
+    if ( multiFamily ) { 
+      types.push( PropertyType.MultiFamilySmall );
+      types.push( PropertyType.MultiFamilySmall );
+    };
+    if ( types.length === 0 ) {
+      types.push( PropertyType.House );
+      toggleHome(true);
+    } 
+    return types;
+  }
+
   async function getResults() {
     setLoading(true);
-    console.log(priceHigh, distance, state);
+    const propertyTypes = setPropertyTypes(homeChecked, condoChecked, townhouseChecked, multiFamilyChecked);
+    console.log(priceHigh, distance, state, propertyTypes);
     const res = await fetch(url, {
       method: 'post',
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ priceLow, priceHigh, distance, state }),
+      body: JSON.stringify({ priceLow, priceHigh, distance, state, propertyTypes }),
     })
     const parsed = await res.json();
     setCount(parsed.count);
@@ -65,7 +111,7 @@ function Results() {
 
   async function getMoreResults() {
     setMoreLoading(true);
-    console.log(priceHigh, distance, state);
+    console.log(priceHigh, distance, state, homeChecked, condoChecked, townhouseChecked, multiFamilyChecked);
     const res = await fetch(url, {
       method: 'post',
       headers: { "content-type": "application/json" },
@@ -76,10 +122,6 @@ function Results() {
     setPaging(parsed.paging);
     setMoreLoading(false);
   }
-
-  function numberWithCommas(x: any) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
 
   return (
     <div className="Results">
@@ -185,7 +227,41 @@ function Results() {
             </Form.Control>
           </Col>
         </Form.Group>
-        
+        <Form.Group as={Row} controlId="houseCheckbox">
+          <Col xs="12">
+            <Form.Label>Show results for</Form.Label>
+          </Col>
+          <Col xs="6">
+            <Form.Check 
+              checked={homeChecked} 
+              onChange={selectHome}
+              type="checkbox" label="Houses" />
+          </Col>
+          <Col xs="6">
+            <Form.Check 
+              checked={townhouseChecked} 
+              value="3"
+              onChange={selectTownhouse}
+              type="checkbox" label="Townhouses" />
+            </Col>
+        </Form.Group>
+        <Form.Group as={Row}>
+          <Col xs="6">
+            <Form.Check 
+              checked={condoChecked} 
+              value="2"
+              onChange={selectCondo}
+              type="checkbox"
+              label="Condos" />
+          </Col>
+          <Col xs="6">
+            <Form.Check 
+              checked={multiFamilyChecked} 
+              value="4"
+              onChange={selectMultiFamily}
+              type="checkbox" label="Multi-family" />
+          </Col>
+        </Form.Group>
         <Button className="form-submit" variant="primary" onClick={getResults}>
           Let's Go!
           {loading && <Spinner className="loading-status" as="span" animation="grow" size="sm" role="status" aria-hidden="true" />}
